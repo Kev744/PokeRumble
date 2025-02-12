@@ -4,7 +4,6 @@ Web page designed for all users that love Pokemon, you can find here your happin
 Web Architecture 
 
 --- server
-  |
   |------ schedule.php (CronTab to add nine Pokemon for dataHistory.json every day at 2 hours)
   |------ missionDay.php (Retrieving Pokemon of dataHistory.json for each missionDay)
   |------ token.php (Generate token composed of {nbPokemon, langId, timer, email} with JWT.io to after decoding it into record.php)
