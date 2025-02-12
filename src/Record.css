@@ -1,0 +1,101 @@
+.tablesRecord {
+    display: flex;
+    flex-wrap: wrap;
+    flex-flow: row;
+    justify-content: space-around;
+}
+
+table {
+    width: 30%; /* Table takes 30% of the parent container width */
+    height: max-content;
+    box-sizing: border-box;
+    border-collapse: collapse;
+    margin: 15px;
+    border-radius: 5px; /* Rounded corners for both table and gradient */
+    overflow: hidden; /* Ensures table contents stay within borders */
+    padding: 1px; /* Adds spacing between gradient and table contents */
+    border: 5px solid transparent;
+    background: linear-gradient(45deg, purple 25%, orange 50%, greenyellow 75%, green) border-box;
+    table-layout: fixed; /* Ensures consistent column widths */
+}
+
+/* Set specific column widths */
+table thead th,
+table tbody td {
+    text-align: center; /* Centers the text content */
+    word-wrap: break-word; /* Ensures long text wraps inside the cell */
+}
+
+table tbody tr, table thead th {
+    background-color: white;
+    border-bottom: 1px solid black;
+    font-size: clamp(10px, calc(16px - 0.1vw), 16px);
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors for better readability */
+}
+/* Ensure images remain properly styled */
+table img {
+    position: absolute; /* Allows absolute positioning */
+    top: -25%;
+    left: -25%;
+    width: 150%; /* Stretches to fill container width */
+    height: 150%; /* Stretches to fill container height */
+    object-fit: fill; /* Forces distortion to fill the container */
+}
+
+.wrapTitleImg {
+    position: relative;
+    border : 1px solid black;
+    width: 505%; /* Full width of its parent container */
+    height: 100px; /* Fixed height for the container */
+    overflow: hidden; /* Ensures content doesn't overflow the container */
+    display: flex;
+    align-items: center; /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+    background-color: #f0f0f0; /* Optional background to highlight layout */
+}
+
+
+#categoryCountry {
+    position: relative;
+    width: 100%;
+    font-family: "Roboto Light", sans-serif;
+    font-size: larger;
+    font-weight: bold;
+    color: #333; /* Subtle text color for better readability */
+    z-index: 5;
+    text-align: center;
+}
+
+#myPosition {
+    background-color: darkgrey;
+    box-shadow: inset 0 0 5px 1px black;
+}
+/* Responsive styling for smaller screens */
+@media (max-width: 1024px) {
+    .tablesRecord {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: start;
+        align-content: baseline;
+        align-items: baseline;
+    }
+
+    table {
+        width: 95%; /* Makes the table take full width on small screens */
+        overflow-y: auto; /* Allows horizontal scrolling if needed */
+    }
+
+    table tbody tr {
+        margin-bottom: 10px; /* Adds spacing between rows */
+    }
+
+    table tbody td {
+        width: 100%; /* Full width for each cell */
+        text-align: left; /* Align text to the left */
+        padding: 10px; /* Adds spacing within cells */
+    }
+}

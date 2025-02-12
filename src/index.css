@@ -1,0 +1,230 @@
+#root {
+  font-family: 'Arial', sans-serif; /* Use a playful, readable font */
+}
+
+#root:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.3;
+  background: url("data/FondJoint.png") no-repeat center center fixed; /* Background image */
+  background-size: cover;
+  z-index: -998;
+}
+
+.app {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+}
+
+.menu {
+  text-align: center;
+  background-color: #FFCC00; /* Pikachu yellow */
+}
+
+.menu p {
+  text-shadow: 1px 3px 1px orange;
+}
+
+/* Navigation styling with Pokémon colors */
+nav {
+  display: flex;
+  background-color: #FFCC00; /* Pikachu yellow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for depth */
+  width: 100%;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+nav a {
+  box-sizing: border-box;
+  height: 50%;
+  font-size: 1.35vw;
+  font-weight: bold;
+  text-decoration: none;
+  color: #3B4CCA; /* Pokémon blue */
+  border-right: 2px solid #FF0000; /* Red borders like Pokéballs */
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+nav a:last-child {
+  border-right: none;
+}
+
+.langPanel {
+  padding: 0 25px;
+  display: flex;
+  justify-content: left;
+  list-style: none;
+  gap: 30px;
+}
+
+.langPanel img {
+  height: 40px;
+  width: calc(40px - 2%);
+  cursor: pointer;
+}
+
+
+/* Logo styling */
+.App-logo {
+  max-height: 80px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+  animation: float 3s ease-in-out infinite; /* Adds a floating animation */
+}
+
+/* Floating animation for the logo */
+@keyframes float {
+  0% {
+    transform: translatey(0px);
+  }
+  50% {
+    transform: translatey(-10px);
+  }
+  100% {
+    transform: translatey(0px);
+  }
+}
+
+.appDomain, .tablesRecord, .questDay, .informations, .pokedex, .reduceCont {
+  flex-grow: 1;
+}
+
+/* Additional styling for forms and buttons */
+.appDomain button {
+  background-color: #FF0000; /* Red, like a Pokéball */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.appDomain button:hover {
+  background-color: #CC0000; /* Darker red on hover */
+}
+
+/* Form styling */
+input {
+  border: 2px solid #3B4CCA; /* Pokémon blue */
+  padding: 10px;
+  border-radius: 5px;
+  width: 80%;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+#credits{
+  width: 100%;
+  border: 1px solid black;
+  background-color: rgb(255,245,0);
+  box-sizing: border-box;
+  text-align: justify-all;
+}
+
+#credits p {
+  padding: 1px;
+  font-size: 0.75rem;
+}
+
+/* Pokémon-Themed Navigation for Smaller Screens */
+@media (min-width:520px) and (max-width: 1040px) {
+  nav {
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    gap: 10px; /* Add spacing between navigation items */
+    height: auto;
+    width: auto;
+    background-color: #ffcc00; /* Pokémon yellow background */
+    border: 3px solid #3b4cca; /* Pokémon blue border */
+    border-radius: 10px; /* Smooth corners for a playful look */
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  nav a {
+    border-right: none;
+  }
+
+  nav a:nth-child(1) {
+    display: flex;
+    flex: 1 0 100%;
+  }
+
+  nav a:nth-child(n+2) {
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: 'Comic Sans MS', 'Comic Neue', sans-serif; /* Fun font */
+    color: #3b4cca; /* Pokémon blue text */
+    text-decoration: none;
+    background-color: #fff;
+    border: 2px solid #ff0000; /* Pokémon red border */
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 100%;
+    transition: transform 0.2s, background-color 0.3s;
+  }
+
+  nav a:hover:nth-child(n+2) {
+    transform: scale(1.1); /* Add a playful bounce effect on hover */
+    background-color: #ffcc00; /* Yellow background on hover */
+  }
+
+  .langPanel {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  nav {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Larger spacing for better touch navigation */
+    height: auto;
+    width: 100%;
+    background-color: #ffcc00; /* Pokémon yellow background */
+    border: 3px solid #3b4cca; /* Pokémon blue border */
+    border-radius: 10px;
+    padding: 15px;
+  }
+
+  nav a  {
+    border: none;
+  }
+
+  nav a:nth-child(n+2){
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: 'Comic Sans MS', 'Comic Neue', sans-serif;
+    color: #ff0000; /* Pokémon red text */
+    text-decoration: none;
+    background-color: #fff;
+    border: 2px solid #3b4cca; /* Pokémon blue border */
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: transform 0.2s, background-color 0.3s;
+  }
+
+  nav a:hover:nth-child(n+2) {
+    transform: scale(1.2); /* Make the bounce effect slightly larger */
+    background-color: #3b4cca; /* Blue background on hover */
+    color: #fff; /* White text for better contrast on hover */
+  }
+}

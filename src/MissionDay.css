@@ -1,0 +1,184 @@
+
+
+.questDay {
+    position: relative;
+    border-radius: 15px;
+    border: 5px groove black;
+    width: 50%;
+    min-height: 500px;
+    background: linear-gradient(10deg, magenta 30%, orange 50%, yellow);
+    text-align: center;
+    margin: 5px auto; /* Center horizontally */
+}
+
+.questDay img {
+    max-width: 400px;
+    width: 100%;
+    min-width: 128px;
+    object-fit: contain;
+    height: 35%;
+    max-height: 200px;
+}
+
+.img-arrow-container {
+    position: relative;
+}
+
+
+
+.questDay .input-button-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: baseline;
+    max-width: 100%;
+    padding: 0;
+    margin: 0 0 50px;
+    box-sizing: border-box;
+}
+
+.questDay .autocomplete-container {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+
+.questDay .autocomplete-container label input {
+    width: 100%;
+    border: 2px solid red;
+    border-radius: 15px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.questDay .autocomplete-container .suggestions li {
+    padding: 3px;
+    cursor: pointer;
+}
+
+.questDay .autocomplete-container .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: white;
+    border: 2px solid #ffcc00;
+    border-radius: 10px;
+    list-style-type: none;
+    padding: 3px;
+    box-sizing: border-box;
+    max-height: 140px;
+    text-align: left;
+}
+
+#missionButton {
+    cursor: pointer;
+    padding: 1em;
+    border-radius: 25px;
+    flex: 1 1 20%;
+    background-color: yellowgreen;
+    font-family: "Comic Sans MS", 'fantasy';
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.questDay .wrapper-info-progression {
+    position: absolute;
+    bottom: 15px;
+    min-width: 100%;
+}
+
+.questDay .progression {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.questDay .progression p {
+    overflow: hidden;
+    border-radius: 8px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset -1px 1px black; /* Keeps the box-shadow */
+    border: 5px ridge lightpink; /* Keeps the border */
+    background-color: lightgrey; /* Removes the gray background */
+    font-size: 2rem; /* Adjust size of tickmark */
+    line-height: 1; /* Ensures the container fits the tickmark tightly */
+    width: 1em; /* Makes width fit the tickmark */
+    height: 1em; /* Makes height fit the tickmark */
+    text-align: center; /* Centers the tickmark inside the container */
+    margin: 0;
+}
+
+#leftDaily {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 75px;
+    width: 10vmax;
+    height: 100%;
+    cursor: pointer;
+}
+
+#rightDaily {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 75px;
+    width: 10vmax;
+    height: 100%;
+    cursor: pointer;
+}
+
+#rightDaily:hover path.arrow {
+    filter: drop-shadow(-5px 10px 5px blue);
+}
+
+#leftDaily path {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(-180deg);
+}
+
+#leftDaily:hover path.arrow {
+    filter: drop-shadow(-5px 10px 5px blue);
+}
+
+#leftDaily, #rightDaily text {
+    font-size: 32px;
+}
+
+@media (max-width: 768px) {
+
+    .questDay {
+        width: 95%;
+        min-height: 500px;
+    }
+
+    #rightDaily {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 75px;
+        width: 15vmax;
+        height: 100%;
+    }
+
+    #leftDaily {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 75px;
+        width: 15vmax;
+        height: 100%;
+    }
+
+}
+

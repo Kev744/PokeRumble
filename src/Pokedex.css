@@ -1,0 +1,26 @@
+.pokedex {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    margin-top: 10vh;
+}
+
+
+#container {
+    text-align: center;
+    font-weight: bold;
+    font-kerning: auto;
+    font-family: 'Bahnschrift', fantasy;
+}
+
+
+
+#container img {
+    width: 60%;
+    height: 60%;
+    object-fit: scale-down;
+}
+
+
+
+
+

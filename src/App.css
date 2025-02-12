@@ -1,0 +1,373 @@
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.containerForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.formPokemon {
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #ffcc00, #ff6600);
+  border: 5px solid #ff0000;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.formPokemon.correct {
+  animation: shine 1s ease-in alternate;
+}
+
+.formPokemon.correct * {
+  animation: shine 1s ease-in alternate;
+}
+
+.formPokemon.correct button {
+  background-color: white !important;
+}
+
+/* Incorrect Guess Styles */
+.formPokemon.incorrect {
+  animation: shake 0.4s ease-in-out alternate;
+}
+
+/* Container Styling */
+.containerImg {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.borderImg {
+  width: 106px;
+  height: 106px;
+}
+
+.borderImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.input-button-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+}
+
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.autocomplete-container input {
+  position: relative;
+  height: 50%;
+  width: auto;
+  font-size: 1.5em;
+  padding: 10px;
+  margin-bottom: 2px;
+  border: 2px solid #ffcc00;
+  border-radius: 25px;
+  outline: none;
+  transition: box-shadow 0.2s;
+  z-index: 2;
+}
+
+.autocomplete-container input:focus {
+  box-shadow: 0 0 12px 4px rgba(255, 204, 0, 0.5);
+}
+
+.autocomplete-container .suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+  border: 2px solid #ffcc00;
+  border-radius: 10px;
+  list-style-type: none;
+  padding: 10px;
+  margin: 5px 0;
+  max-height: 200px;
+}
+
+.autocomplete-container .suggestions li {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.autocomplete-container .suggestion-active {
+  background-color: #ffcc00;
+  color: #fff;
+}
+
+.autocomplete-container .no-suggestions {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.autocomplete-container .no-suggestions em{
+  font-style: normal; /* Avoid italic for better readability */
+  font-weight: bold; /* Make it stand out */
+  color: #333; /* Neutral text color for good contrast */
+  background: #ffcc00; /* Bright yellow to match the Pokémon theme */
+  border-radius: 10px; /* Rounded edges */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  text-align: center; /* Center align the text */
+  display: inline-block; /* Keeps the styling compact */
+  width: calc(100% - 10px);
+  animation: fadeIn 0.5s ease-in-out; /* Subtle fade-in effect */
+  box-sizing: border-box;
+}
+
+#left {
+  position: absolute;
+  z-index: 1;
+  left: 15%;
+  bottom: 17%;
+  width: 20%;
+}
+
+#left path {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-180deg);
+}
+
+#left:hover path.arrow {
+  filter: drop-shadow(-5px 10px 5px white);
+}
+
+#right {
+  position: absolute;
+  z-index: 1;
+  right: 15%;
+  bottom: 17%;
+  width: 20%;
+  rotate: 0deg;
+  cursor: pointer;
+}
+
+#right:hover path.arrow {
+  filter: drop-shadow(-5px 10px 5px white);
+}
+
+#left, #right text {
+  font-size: 50px
+}
+
+
+#queryPokemon {
+  position: relative;
+  background-image: url("data/ButtonPokemon.png");
+  background-repeat: no-repeat;
+  background-position: 47% 55%;
+  background-size: 180px 180px;
+  width: 100px;
+  height: 100px;
+  margin-top: 2px;
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 2;
+}
+
+#queryPokemon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+.selectionMode {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #3b4cca; /* Vibrant Pokémon blue border */
+  background: linear-gradient(to bottom, #ffcc00 30%, #ffffff); /* Bright Pokémon gradient */
+  padding: 20px;
+  flex: 1 1 100%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for a polished look */
+}
+
+.selectionMode label {
+  color: #3b4cca; /* Pokémon blue color */
+  font-size: 1.4rem;
+  font-family: Calibri, sans-serif;
+}
+
+.selectionMode button {
+  margin: 12px;
+  padding: 12px 25px; /* Adds slightly larger buttons */
+  font-size: 1.1rem;
+  font-family: "Comic Sans MS", 'Comic Neue', sans-serif; /* Playful and fun font */
+  color: white;
+  background: linear-gradient(to bottom, #ff0000, #cc0000); /* Pokémon red gradient */
+  border: 3px solid #3b4cca; /* Pokémon blue border for contrast */
+  border-radius: 12px; /* Rounded button corners */
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Slight button shadow */
+}
+
+.selectionMode button:hover {
+  background-color: #ffcc00; /* Bright Pokémon yellow hover */
+  transform: scale(1.1); /* Adds playful zoom effect */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Stronger hover shadow */
+}
+
+.selectionMode em {
+  border: 2px dashed #ff0000; /* Pokémon red dashed border */
+  background-color: #ffffff; /* White background */
+  color: #3b4cca; /* Pokémon blue text */
+  padding: 8px 12px;
+  border-radius: 8px; /* Slightly rounded edges */
+  font-style: normal; /* Removes italic style */
+  font-weight: bold;
+  text-shadow: 1px 1px 2px #000; /* Enhances readability */
+}
+
+.selectionMode p {
+  margin: 12px 0 6px;
+  font-size: 1.4rem;
+  color: #3b4cca; /* Pokémon blue */
+  font-family: 'Calibri', sans-serif; /* Clean and modern font */
+  text-align: center; /* Centers text for better readability */
+}
+
+.selectionMode .formRecord {
+  display: inline-block;
+  width: 100%;
+}
+
+.selectionMode .formRecord span {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+}
+
+.selectionMode .formRecord span label {
+  flex-grow: 1;
+}
+
+.selectionMode .formRecord span input {
+  flex-basis: 80%;
+  flex-shrink: 1;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+.timerHTML {
+  border-radius: 10px;
+  border: 3px solid black;
+  background: linear-gradient(45deg, lightgrey 75%, white 100%);
+  font-family: "Digital-7 Mono", serif;
+  font-weight: bolder;
+  color: red;
+  margin: 0 auto;
+  text-align: center;
+  width: 25%;
+}
+
+.radioDisplayCurrentPokemon {
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: column;
+  border: 1px solid purple;
+  border-radius: 15px;
+  padding: 3px;
+}
+
+.radioDisplayCurrentPokemon input[type='radio'] {
+  width: 1em;
+  box-shadow: 0 1px 8px 3px hotpink;
+  border-radius: 100%;
+  appearance: inherit;
+  border:1px solid #999999;
+  position:relative;
+  box-sizing:border-box;
+  background: white;
+  cursor:pointer;
+  margin-right: 8px;
+}
+
+
+.radioDisplayCurrentPokemon input[type="radio"]:checked:before {
+  content:"";
+  position:absolute;
+  border-radius: 100%;
+  left:25%;
+  top:25%;
+  width:50%;
+  height:50%;
+  background: tomato;
+  box-sizing: border-box;
+}
+
+.radioDisplayCurrentPokemon span {
+  display: inline-flex;
+  flex-grow: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shine {
+  0% {border-color : rgba(255,255,255,1)}
+  25% {border-color: rgba(255,255,255,0.75);}
+  50% {border-color: rgba(255,255,255,0.50)}
+  75% {border-color : rgba(255,255,255,0.25)}
+  100% {border-color : rgba(255,255,255,0)}
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+@media (max-width: 768px) {
+
+  .selectionMode .formRecord span input {
+    flex: 0 0 75%;
+    box-sizing: border-box;
+  }
+
+}
