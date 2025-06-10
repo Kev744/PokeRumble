@@ -1,6 +1,12 @@
-<Limit GET POST PUT OPTIONS DELETE PATCH HEAD>
-    Require all granted
-</Limit>
-<LimitExcept GET POST PUT OPTIONS DELETE PATCH HEAD>
-    Require all denied
-</LimitExcept>
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . index.php [L]
+  RewriteCond %{HTTP_HOST} ^pokerumble.com$ [NC]
+  RewriteRule (.*) https://www.pokerumble.com/$1 [R=301,L]
+</IfModule>
+<IfModule mod_negotiation.c>
+  Options -MultiViews
+</IfModule>
