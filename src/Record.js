@@ -33,7 +33,7 @@ const Record = () => {
     }
 
     useEffect(() => {
-        fetch("/server/record.php")
+        fetch("/server/record")
             .then(res => res.json())
             .then(data => {
                 if (data.message) {

@@ -10,7 +10,15 @@ import Const from "./utils/Const";
 import {encryptStorage} from "./utils/storage";
 import {hashValue} from "./utils/hash";
 import {getLocalizedString} from "./utils/TranslationData"
+import ShareSocialMedia from "./ShareSocialMedia";
+import {Navigate, useParams} from "react-router-dom";
+import {Helmet} from "react-helmet";
 
+
+function withParams(Component) {
+    return props => <Component {...props} stats={useParams().stats} />;
+
+}
 
 // eslint-disable-next-line no-undef
 class App extends React.Component {
@@ -32,7 +40,7 @@ class App extends React.Component {
             mode: 0,
             email1:"",
             email2:"",
-            incrementCountToPokemonIndex:0,
+            incrementCountToPokemonIndex: 0,
             defilementPokemon:0,
             answer: null,
             last10Pokemon: [],
@@ -57,10 +65,17 @@ class App extends React.Component {
         return initialList.filter(y => listFilter.map(x => x[langKey]).indexOf(y[langKey]) === -1);
     }
 
-    selectDefilementPokemon = (stateDefilement) => {
-        this.setState({defilementPokemon : stateDefilement});
-        if(stateDefilement === 0) { this.randomPokemon(); }
-        else {this.byOrderPokemon();}
+    selectDefilementPokemon(stateDefilement) {
+        this.setState((prevState) => {
+            if (stateDefilement === 0) {
+                this.randomPokemon();
+            }
+            else {
+                this.byOrderPokemon(prevState.incrementCountToPokemonIndex);
+            }
+
+        return {defilementPokemon : stateDefilement}}
+    )
     }
 
 
@@ -77,27 +92,34 @@ class App extends React.Component {
 
     }
 
-    byOrderPokemon = (id = 0) => {
+    byOrderPokemon(id) {
         const max = this.refreshKnownPokemon(Pokemon, this.state.listPokemon).length - 1;
         let newId = id;
+
         if(id < 0) {
             newId = max + id;
             this.setState({incrementCountToPokemonIndex : newId});
         }
 
-        const pokemonById = this.refreshKnownPokemon(Pokemon, this.state.listPokemon)[newId]
         if (max === 0) {
             this.setState({count : -1})
             return;
         }
-        this.setState({ count: pokemonById['id'], textPokemon : ""});
+
+        this.setState((prevState) => {
+
+            const pokemonById = this.refreshKnownPokemon(Pokemon, prevState.listPokemon)[newId]
+
+            return { count: pokemonById['id'], textPokemon : ""}
+        });
 
     }
 
     initialPokedex = () => {
         const modeName = Const.getModeName(this.state.mode)
         this.setState({ listPokemon: encryptStorage.getItem(modeName, false) || []}, () =>
-        {this.randomPokemon(); this.props.changeMode(this.state.mode);});
+        {this.randomPokemon(); this.props.changeMode(this.state.mode);
+        });
     }
 
     componentDidMount() {
@@ -163,26 +185,29 @@ class App extends React.Component {
 
                 }
                 return {listPokemon: newPokemon}
-            }, () => {this.selectDefilementPokemon(this.state.defilementPokemon);})
+            })
         } else {
-            this.setState({ evaluateAnswer: "incorrect" , answer : real_pokemon.toUpperCase()});
-
             const notKnownIndex = actualPokemon.id;
 
             this.setState(prevState => ({
-                last10Pokemon :  [...prevState.last10Pokemon, notKnownIndex].slice(-10)
+                last10Pokemon :  [...prevState.last10Pokemon, notKnownIndex].slice(-10),
+                incrementCountToPokemonIndex : prevState.incrementCountToPokemonIndex + 1,
+                evaluateAnswer: "incorrect",
+                answer : real_pokemon.toUpperCase()
             }))
-
-
 
             setTimeout(r => r, 1000);
 
-            await this.selectDefilementPokemon(this.state.defilementPokemon);
         }
+
+        await this.selectDefilementPokemon(this.state.defilementPokemon)
 
         setTimeout(() => {
             this.setState({ evaluateAnswer: "" });
         }, 1000);
+
+
+        await fetch('/server/countClicks')
     }
 
 
@@ -195,20 +220,17 @@ class App extends React.Component {
         })
     }
 
-    handleNameChange = textPokemon => {
-        this.setState({textPokemon : textPokemon})
+    handleNameChange = (textPokemon) => {
+        this.setState({textPokemon})
     }
 
     handleStop = (disableInput) =>  {
         this.setState({disableInput})
     }
 
-    pokemonLang = (listPokemon, lang) => {
-       return listPokemon.map((x) => {
-           const k = Object.keys(x);
-           return x[k[parseInt(lang)+1]]
-           }
-       )
+    pokemonLang = (listPokemon, userPokemon, lang) => {
+       return listPokemon.map((x) => x[lang])
+           .filter(pkLang => !userPokemon.map(x => x[lang]).includes(pkLang))
     }
 
     setTimer = (timer) => {
@@ -263,7 +285,7 @@ class App extends React.Component {
     }
 
     claimToken = async (hash) => {
-         await fetch('/server/token.php', {
+         await fetch('/server/token', {
              method: 'POST',
              headers: {
                  'Content-Type': 'application/json',
@@ -274,7 +296,7 @@ class App extends React.Component {
 
 
     render() {
-        const { listPokemon, timer, count } = this.state;
+        const { listPokemon, timer, count} = this.state;
         const remaining = this.refreshKnownPokemon(Pokemon, listPokemon).length
         const actualPokemonObj = Pokemon.find(x => x.id === count)
         const langKey = this.props.lang === 0 ? "french_name" : this.props.lang === 1 ? "english_name" : "german_name";
@@ -324,6 +346,11 @@ class App extends React.Component {
 
         return (
             <div className="appDomain">
+
+                {!!this.props.stats && <Navigate to={'..'} replace={true}/>}
+                <Helmet>
+                    <title> {getLocalizedString(langId, 'appTitle')} </title>
+                </Helmet>
                 <em style={{"position" : "absolute", "right" : "0"}}>  {getLocalizedString(this.props.lang, "remainingPokemon", { count: remaining })}</em>
                 <div className={"containerForm"}>
                 <form className={`formPokemon ${this.state.evaluateAnswer}`} id="pokemonQuery" onSubmit={(e) => e.preventDefault()}>
@@ -343,7 +370,7 @@ class App extends React.Component {
                     <div className="input-button-wrapper">
                         {(this.state.mode === 0 && this.state.answer) && <em> Answer : {this.state.answer} </em>}
                         <div className="autocomplete-container">
-                            <Autocomplete suggestions={this.pokemonLang(Pokemon, this.props.lang)} name={this.state.textPokemon} onNameChange={this.handleNameChange} disableInput={this.state.disableInput}/>
+                            <Autocomplete suggestions={this.pokemonLang(Pokemon, this.state.listPokemon,  langKey)} name={this.state.textPokemon} onNameChange={this.handleNameChange} disableInput={this.state.disableInput}/>
                         </div>
                         <Arrow
                             id="left"
@@ -354,7 +381,8 @@ class App extends React.Component {
                                     this.setState((prevState) => {
                                     const last10Pokemon = [...prevState.last10Pokemon]; // Create a copy to avoid direct mutation
                                     const previousCount = last10Pokemon.pop(); // Remove the last Pokemon
-                                    if(previousCount) {this.handleStop(true);
+                                    if(previousCount) {
+                                        this.handleStop(true);
                                         this.setState({count : previousCount, answer : Pokemon.find(x => x.id === previousCount)[langKey]})}
                                     else {this.setState({back : 'none'})}
                                     return {
@@ -368,29 +396,34 @@ class App extends React.Component {
                                     this.byOrderPokemon(decrementedCount)
                                     return {incrementCountToPokemonIndex : decrementedCount}
                                     })
+                                }
                             }
-                            }}
+                        }
                         />
                         <Arrow id="right" text="Pass" onClick={() => {
                             if (this.state.defilementPokemon === 0) {
                                 this.randomPokemon();
                                 this.setState(prevState => ({
-                                    answer: actualPokemonObj[langKey],
+                                    answer: actualPokemonObj[langKey].toUpperCase(),
                                     last10Pokemon: [...prevState.last10Pokemon, actualPokemonObj['id']],
                                     back: 'true'
                                 }))
+                                this.handleStop(false)
                             }
                             else {
                                 this.setState((prevState) => {
                                     const incrementedCount = prevState.incrementCountToPokemonIndex + 1;
                                     this.byOrderPokemon(incrementedCount)
-                                    return {incrementCountToPokemonIndex : incrementedCount}
+                                    return {
+                                        incrementCountToPokemonIndex : incrementedCount,
+                                        answer: actualPokemonObj[langKey].toUpperCase(),
+                                    }
                                 })
                             }
                         }
                         }/>
 
-                        <button title={"Guess the Pokemon !"} id={"queryPokemon"} onClick= { () => this.validatePokemon(this.pokemonLang([actualPokemonObj], this.props.lang)[0], this.state.textPokemon)} type={"submit"}/>
+                        <button title={"Guess the Pokemon !"} id={"queryPokemon"} onClick= { () => this.validatePokemon(this.pokemonLang([actualPokemonObj], this.state.listPokemon, langKey)[0], this.state.textPokemon)} type={"submit"}/>
                     </div>
 
                 </form>
@@ -403,24 +436,18 @@ class App extends React.Component {
                     updateForm={this.updateDisplayFormStatus}
                     mode={this.state.mode}
                     isReset={this.state.isReset}
+                    setReset={(isReset) => {this.setState({isReset})}}
                 />)}
 
                 <div className="selectionMode">
-                    {buttonSwitchMode(this.state.mode)}
+
+                    {this.state.mode === 0 && buttonSwitchMode(0)}
 
                     {this.state.mode === 1 && (
 
                         <Fragment>
-                            <div className="selectionMode">
 
-                                <p>{getLocalizedString(this.props.lang, 'timerConfiguration')['options']}</p>
-                                <button type="button" onClick={() => this.state.buttonStop.current.startTimer()}>
-                                    {getLocalizedString(this.props.lang, 'timerConfiguration')['start']}
-                                </button>
-                                <button type="button" onClick={() => this.state.buttonStop.current.stopTimer()}>
-                                    {getLocalizedString(this.props.lang, 'timerConfiguration')['stop']}
-                                </button>
-                            </div>
+                            <div className="selectionMode">
                             <p>{getLocalizedString(this.props.lang, "savingInformation")}</p>
                             <button
                                 onClick={(e) => {
@@ -445,7 +472,7 @@ class App extends React.Component {
                                             }
 
                                             try {
-                                                const url = `/server/record.php`;
+                                                const url = `/server/record`;
                                                 const email = this.state.email1.trim();
 
                                                 const pokemons = () => {
@@ -494,7 +521,7 @@ class App extends React.Component {
                                         }}
                                     >
                                         <span>
-                                        <label htmlFor={"inpNickname"}>Nickname:</label>
+                                        <label htmlFor={"inpNickname"}>Nickname/Pseudo:</label>
                                         <input
                                             id={"inpNickname"}
                                             required={true}
@@ -535,18 +562,21 @@ class App extends React.Component {
                                         />
                                         </span>
 
-                                        <button type={"submit"}>Submit</button>
+
+
+                                       <button type={"submit"}>{getLocalizedString(this.props.lang, 'sendButton')}</button>
+
                                     </form>
 
                                 </div>
                             )}
+                            </div>
+
+
                         </Fragment>
                     )}
 
-                    <p style={{textDecoration : 'underline'}}>
-                        {getLocalizedString(this.props.lang, 'situationMode', {mode : situationMode})}
-                    </p>
-
+                    <ShareSocialMedia lang={langId} nbPokemonUser={this.state.listPokemon.length} nbPokemon={Pokemon.length} contentKey={'appTitle'}/>
 
                     {this.state.mode === 0 && (
                         <div className="radioDisplayCurrentPokemon">
@@ -572,6 +602,7 @@ class App extends React.Component {
       </div>
       )}
 
+                    {this.state.mode === 1 && buttonSwitchMode(1)}
 
                     <em style={{marginTop: '10px'}}>{getLocalizedString(this.props.lang, 'or')}</em>
 
@@ -592,6 +623,7 @@ class App extends React.Component {
                         onClick={() => {
                             const timer = encryptStorage.getItem("timer", false);
                             const pokemonRec = encryptStorage.getItem("pokemonRec", false);
+
 
 
                             const hashData = JSON.stringify({ timer : timer, pokemon : pokemonRec });
@@ -639,4 +671,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default withParams(App);

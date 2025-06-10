@@ -4,6 +4,7 @@ import Autocomplete from "./Autocomplete";
 import Arrow from "./Arrow";
 import './MissionDay.css'
 import {useNavigate, useParams} from "react-router-dom";
+import ShareSocialMedia from "./ShareSocialMedia";
 
 const MissionDay = (props) => {
 
@@ -20,12 +21,12 @@ const MissionDay = (props) => {
 
     function dayBefore() {
         const idMission = parseInt(id) - 1
-        navigate(`../missionDay/${idMission}`)
+        navigate(`../daily-mission/${idMission}`)
     }
 
     function dayAfter() {
         const idMission = parseInt(id) + 1
-        navigate(`../missionDay/${idMission}`)
+        navigate(`../daily-mission/${idMission}`)
     }
 
 
@@ -46,32 +47,31 @@ const MissionDay = (props) => {
 
     const [state, dispatch] = useReducer(reducer, {pokemon : null})
 
+    const total = state?.progression?.filter(x => x?.props.className === 'right').length
+
 
     useEffect(() => {
         const fetchMissionDay = async () => {
             try {
                     initialRef.current = true;
-                    const res = await fetch("/server/missionDay.php");
-                    const data = await res.json();
-                    const todayId = data.day.toString()
+
                if (!id) {
+                   const res = await fetch("/server/daily-mission");
+                   const data = await res.json();
+                   const todayId = data.day.toString()
+
                    dispatch({
                             type: 'update',
                             payload: data.message.map(id => Pokemon.find(pok => pok.id === id)).values(),
                             length: data.message.length
                         });
                         // Navigate only after setting the day
-                        navigate(`../missionDay/${todayId}`);
+                        navigate(`${todayId}`);
                 }
 
                 else {
-                    const previousId = parseInt(sessionStorage.getItem('previousId'),10)
-                    if(previousId === parseInt(id,10)) {
-                        navigate(`../missionDay/${todayId}`);
-                    }
-                    sessionStorage.setItem('previousId', id.toString())
 
-                    const res = await fetch(`/server/missionDay.php?day=${id}`);
+                    const res = await fetch(`/server/daily-mission/${id}`);
                     const data = await res.json();
 
                     dispatch({
@@ -84,15 +84,13 @@ const MissionDay = (props) => {
 
                 }
             } catch (error) {
-                await navigate('../missionDay')
+                await navigate('../daily-mission')
                 console.error("Error fetching mission day data:", error);
             }
 
         };
 
         fetchMissionDay();
-
-        return () => {sessionStorage.removeItem('previousId')}
 
 
     }, [id, initialRef.current]);
@@ -104,6 +102,7 @@ const MissionDay = (props) => {
 
 
         setInputPokemon('')
+
 
         if (input_name.toLowerCase() === real_name.toLowerCase()) {
             return progressionState.map((x, i) => i === index ?
@@ -118,7 +117,8 @@ const MissionDay = (props) => {
         }
 
         else {
-            return progressionState.map((x, i) => i === index ? <span className={'wrong'} style={{
+            return progressionState.map((x, i) => i === index ?
+            <span className={'wrong'} style={{
                 backgroundColor: 'red',
                 color: 'white',
                 overflow: 'hidden',
@@ -137,28 +137,43 @@ const MissionDay = (props) => {
     return (
         <div className="questDay">
             {!state.pokemon ? <div>Waiting from data... <br/> If not working, try to refresh the page or contact me from 'About' page </div> : (state.pokemon.done ?
-                <p> You have actually found {state.progression.filter(x => x?.props.className === 'right').length}/{state.progression.length} </p> :
-                (<Fragment>
-                    <div className='img-arrow-container'>
-                    {state.pokemon.value && <img src={require(`./images/${state.pokemon.value.id}.png`)} alt={""}/>}
-                    <Arrow id="leftDaily" onClick={() => dayBefore()} text="Day Before"/>
-                    <Arrow id="rightDaily" onClick={() => dayAfter()} text="Day After"/>
-                    </div>
-                    <div className="input-button-wrapper">
-                    <div className='autocomplete-container'>
-                    <Autocomplete suggestions={Pokemon.map(x => x[langKey])} name={inputPokemon} onNameChange={setInputPokemon}/>
-                    </div>
-                    <button id='missionButton' onClick={() => {dispatch({type : 'changePokemon'})}}> Send </button>
-                    </div>
-                    <div className='wrapper-info-progression'>
-                    <div className="progression">
-                        {state.progression && state.progression.map((id,i) => <p key={i}> {id} </p>)}
-                    </div>
-                    </div>
-                </Fragment>))}
+                (<div>
+                    <p> You have actually
+                        found {total}/{state.progression.length} Pokémon
+                        of the daily quest  </p>
 
+                    <ShareSocialMedia lang={props.lang} nbPokemonUser={total} nbPokemon={state.progression.length} contentKey={'missionDayShareTitle'}/>
+
+                </div>)
+                :
+                (
+                    <Fragment>
+                        <div className='img-arrow-container'>
+                        {state.pokemon.value &&
+                            <img src={require(`./images/${state.pokemon.value.id}.png`)} alt={""}/>}
+            <Arrow id="leftDaily" onClick={() => dayBefore()} text="Day Before"/>
+            <Arrow id="rightDaily" onClick={() => dayAfter()} text="Day After"/>
         </div>
-    )
+        <div className="input-button-wrapper">
+            <div className='autocomplete-container'>
+                <Autocomplete suggestions={Pokemon.map(x => x[langKey])} name={inputPokemon}
+                              onNameChange={setInputPokemon}/>
+            </div>
+            <button id='missionButton' onClick={() => {
+                dispatch({type: 'changePokemon'})
+            }}> Send
+            </button>
+        </div>
+        <div className='wrapper-info-progression'>
+            <div className="progression">
+                {state.progression && state.progression.map((id, i) => <p key={i}> {id} </p>)}
+            </div>
+        </div>
+    </Fragment>
+))}
+
+</div>
+)
 }
 
 export default MissionDay;

@@ -5,6 +5,13 @@ html, body, #root {
   padding: 0;
 }
 
+@font-face {
+  font-family: "Digital-7 Mono";
+  src: local("Digital-7 Mono"),
+       local("Digital-7"),
+       url("../public/digital7.ttf") format("truetype");
+}
+
 .containerForm {
   display: flex;
   justify-content: center;
@@ -233,12 +240,12 @@ html, body, #root {
   border: 3px solid #3b4cca; /* Pokémon blue border for contrast */
   border-radius: 12px; /* Rounded button corners */
   cursor: pointer;
-  transition: transform 0.2s ease-in-out, background-color 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Slight button shadow */
 }
 
 .selectionMode button:hover {
-  background-color: #ffcc00; /* Bright Pokémon yellow hover */
+  background-color: black; /* Bright Pokémon yellow hover */
   transform: scale(1.1); /* Adds playful zoom effect */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Stronger hover shadow */
 }
@@ -262,39 +269,80 @@ html, body, #root {
   text-align: center; /* Centers text for better readability */
 }
 
-.selectionMode .formRecord {
-  display: inline-block;
-  width: 100%;
+#registerRecord {
+  display: flex;
+  flex-flow: column wrap;
 }
 
-.selectionMode .formRecord span {
+#registerRecord span {
   display: flex;
   flex-flow: row nowrap;
   align-items: baseline;
 }
 
-.selectionMode .formRecord span label {
+#registerRecord span label {
   flex-grow: 1;
 }
 
-.selectionMode .formRecord span input {
+#registerRecord span input {
   flex-basis: 80%;
   flex-shrink: 1;
   margin: 0;
   box-sizing: border-box;
 }
 
+#registerRecord button:hover {
+  transform: scale(1.05);
+}
+
+
+
+.containerTimer {
+  display: flex;
+  justify-content: center;
+  height: 65px;
+  margin: 5px;
+}
 
 .timerHTML {
-  border-radius: 10px;
+  border-radius: 10px 0 0 10px;
   border: 3px solid black;
   background: linear-gradient(45deg, lightgrey 75%, white 100%);
   font-family: "Digital-7 Mono", serif;
   font-weight: bolder;
   color: red;
-  margin: 0 auto;
-  text-align: center;
   width: 25%;
+  box-sizing: border-box;
+}
+
+.timerHTML p {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#timerOptions {
+  display: block;
+  border-width: 3px 3px 3px 0;
+  border-style: solid;
+  border-color: black;
+  border-radius: 0 10px 10px 0;
+  font-optical-sizing: auto;
+  height: 100%;
+  width: 10%
+}
+
+#timerOptions span {
+  display: flex;
+  font-size: 3rem;
+  height: 100%;
+  line-height: 0.1;
+  align-items: center;
+  justify-content: center;
 }
 
 .radioDisplayCurrentPokemon {
@@ -363,11 +411,39 @@ html, body, #root {
   75% { transform: translateX(-5px); }
 }
 
-@media (max-width: 768px) {
+@media (max-width :1040px) {
 
   .selectionMode .formRecord span input {
     flex: 0 0 75%;
     box-sizing: border-box;
+  }
+
+  .containerTimer {
+    height: calc(65px * 1.1);
+  }
+
+  .timerHTML {
+    width: 50%;
+  }
+
+  #timerOptions {
+    width: 18%;
+  }
+
+}
+
+@media (max-width: 520px) {
+
+  .containerTimer {
+    height: calc(60px * 1.15);
+  }
+
+  .timerHTML {
+    width: 75%;
+  }
+
+  #timerOptions {
+    width: 25%;
   }
 
 }

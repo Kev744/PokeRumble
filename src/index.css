@@ -77,10 +77,9 @@ nav a:last-child {
 /* Logo styling */
 .App-logo {
   max-height: 80px;
-  width: auto;
-  display: block;
-  margin: 0 auto;
   animation: float 3s ease-in-out infinite; /* Adds a floating animation */
+  object-fit: contain;
+  padding: 0;
 }
 
 /* Floating animation for the logo */

@@ -16,7 +16,7 @@ const Dialog2 = React.forwardRef(({ resetTimer, clearProgression, restartTimer, 
         const observer = new MutationObserver(() => {
             if (dialogRef.current && !document.body.contains(dialogRef.current)) {
                 dialogRef.current.close();
-                document.getElementById("root").appendChild(dialogRef.current);
+                document.body.appendChild(dialogRef.current);
                 dialogRef.current.showModal();
             }
         });

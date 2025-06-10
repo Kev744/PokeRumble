@@ -14,6 +14,7 @@ class Timer extends React.Component {
             minutes: 0,
             seconds: 0,
             intervalId: null,
+            isPaused: false
         };
     }
 
@@ -23,19 +24,24 @@ class Timer extends React.Component {
     }
 
     addTimer = async () => {
-        const pokemonHash = await encryptStorage.getItem('pokemonRec', false);
 
-
-        await encryptStorage.setItem("timer", this.state.timer);
-
-        await hashValue(JSON.stringify({ timer: this.state.timer, pokemon: pokemonHash }))
-            .then((hash) => localStorage.setItem('hs', hash));
-
-
-        if (this.props.isReset) {
-            localStorage.removeItem('hs');
-            encryptStorage.removeItem('timer')
+        if (await this.props.isReset) {
+            await localStorage.removeItem('hs');
+            await encryptStorage.removeItem('timer')
+            this.props.setReset(false)
         }
+
+        else {
+            const pokemonHash = await encryptStorage.getItem('pokemonRec', false);
+
+
+            await encryptStorage.setItem("timer", this.state.timer);
+
+            const hs = await hashValue(JSON.stringify({timer: this.state.timer, pokemon: pokemonHash}))
+            localStorage.setItem('hs', hs)
+
+        }
+
     }
 
     async componentWillUnmount() {
@@ -108,20 +114,25 @@ class Timer extends React.Component {
     };
 
     render() {
-        const { hours, minutes, seconds } = this.state;
+        const { hours, minutes, seconds, isPaused } = this.state;
 
         if (this.props.mode === 1) {
             return (
-                <Fragment>
+                <span className="containerTimer">
+
                     <div
-                        className="timerHTML">
+                        className="timerHTML"
+                    >
                         <p>
                         {hours.toString().padStart(2, "0")}:
                         {minutes.toString().padStart(2, "0")}:
                         {seconds.toString().padStart(2, "0")}
                         </p>
                     </div>
-                </Fragment>
+                    <button type="button" id='timerOptions' onClick={() => this.setState( {isPaused : !isPaused}, () => isPaused ? this.startTimer() : this.stopTimer())}>
+                        <span> {isPaused ? String.fromCodePoint(0x23F5) : String.fromCodePoint(0x23F8)} </span>
+                    </button>
+                </span>
             );
         }
         else { return (<></>)}
