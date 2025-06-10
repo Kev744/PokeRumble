@@ -4,11 +4,12 @@
   "type": "project",
   "require": {
     "firebase/php-jwt": "^5.0",
-    "php": ">=7.3.0"
+    "php": ">=7.3.0",
+    "bramus/router" : "~1.6"
   },
   "autoload": {
     "psr-4": {
-      "YourNamespace\\": "server"
+      "Translations\\": "vendor/translations"
     }
   },
   "config": {

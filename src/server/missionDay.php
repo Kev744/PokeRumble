@@ -17,8 +17,8 @@ if (!is_array($dataHistory)) {
     $dataHistory = [];
 }
 
-if (isset($_GET['day'])) {
-    $day = intval($_GET['day']);
+if (isset($day)) {
+    $day = intval($day);
 
     if ($day < 0 || $day >= count($dataHistory)) {
         echo json_encode(["error" => "Invalid day ID"], JSON_UNESCAPED_UNICODE);
